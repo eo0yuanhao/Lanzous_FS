@@ -1,0 +1,87 @@
+﻿<Window x:Class="Lanzous_FS.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Lanzous_FS"
+        xmlns:vs ="clr-namespace:Lanzous_FS.VirtualFileSystem"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="485.2" Width="768">
+    <Window.Resources>
+        <ImageBrush x:Name="icoRes_music" x:Key="ico_music"  ImageSource="res/music.ico"/>
+        <ImageBrush x:Key="ico_video" ImageSource="res/video.ico"/>
+        <ImageBrush x:Key="ico_folder" ImageSource="res/folder.ico"/>
+        <ImageBrush x:Key="ico_file" ImageSource="res/file.ico"/>
+        <ImageBrush x:Key="ico_textfile" ImageSource="res/textfile.ico"/>
+        <local:IconConverter x:Key="iconConverter"/>
+        <Style x:Key="itemDoubleClick_style" TargetType="{x:Type ListViewItem}">
+            <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_DoubleClick" />
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Button x:Name="loginBtn" Content="login" HorizontalAlignment="Left" Margin="596,68,0,0" VerticalAlignment="Top" Width="75" Click="LoginBtn_Click" RenderTransformOrigin="0.56,0.677"/>
+        <Button x:Name="downloadBtn" Content="download" HorizontalAlignment="Left" Height="36" Margin="615,106,0,0" VerticalAlignment="Top" Width="101" Click="DownloadBtn_Click"/>
+        <Button x:Name="uploadBtn" Content="upload" HorizontalAlignment="Left" Margin="600,161,0,0" VerticalAlignment="Top" Width="71" Height="33" Click="UploadBtn_Click"/>
+        <Button x:Name="mkdirBtn" Content="mkdir" HorizontalAlignment="Left" Margin="711,234,0,0" VerticalAlignment="Top" Width="73" Height="33" Click="MkdirBtn_Click"/>
+        <Button x:Name="renameBtn" Content="rename" HorizontalAlignment="Left" Margin="708,280,0,0" VerticalAlignment="Top" Width="76" Height="27" Click="RenameBtn_Click"/>
+        <Button x:Name="DBBtn" Content="DB" HorizontalAlignment="Left" Margin="574,262,0,0" VerticalAlignment="Top" Width="114" Height="36" Click="DBBtn_Click"/>
+        <Button x:Name="insertBtn" Content="insert" HorizontalAlignment="Left" Margin="600,317,0,0" VerticalAlignment="Top" Width="75" Click="InsertBtn_Click"/>
+        <Button x:Name="selectBtn" Content="select" HorizontalAlignment="Left" Margin="600,355,0,0" VerticalAlignment="Top" Width="75" Click="SelectBtn_Click"/>
+        <DockPanel HorizontalAlignment="Left" Height="455" LastChildFill="False" VerticalAlignment="Top" Width="522">
+            <StackPanel DockPanel.Dock="Top" Height="24" VerticalAlignment="Top" Margin="0,0,115,0" RenderTransformOrigin="0.5,0.5">
+
+            </StackPanel>
+            <TreeView x:Name="dirTreeView" DockPanel.Dock="Left"  Width="100" SelectedItemChanged="DirTreeView_SelectedItemChanged">
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate DataType="{x:Type vs:Directory2}" ItemsSource="{Binding Path=SubDirs}">
+                        <TextBlock Text="{Binding Path=Name}"/>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
+            <ListView x:Name="listView" HorizontalAlignment="Left" Height="431" VerticalAlignment="Top" Width="404"
+                  ItemContainerStyle="{StaticResource itemDoubleClick_style}">
+                <ListView.View>
+                    <GridView>
+                        <GridView.Columns>
+                            <GridViewColumn Width="150" Header="file">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<Label   Background="{StaticResource ico_music}" Width="20" Height="20"/>-->
+                                            <Image Width="20" Height="20" Source="{Binding Path=IconType, Converter={StaticResource iconConverter}}"/>
+                                            <Label Content="{Binding Path=Name}" VerticalAlignment="Top" FontSize="14"></Label>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="size" DisplayMemberBinding="{Binding Path=Size, StringFormat={}{0:N0}}" />
+                            <GridViewColumn Header="上传时间" DisplayMemberBinding="{Binding UploadTime}"/>
+                        </GridView.Columns>
+                    </GridView>
+                </ListView.View>
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="下载" Click="DownloadFaceFile">
+                            <MenuItem.Icon>
+                                <Image Source="res/download.ico" Width="20" Height="20"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="上传" Click="UploadFaceFile">
+                            <MenuItem.Icon>
+                                <Image Source="res/upload.ico" Width="20" Height="20"/>
+                            </MenuItem.Icon>
+                        </MenuItem>                        
+                        <MenuItem Header="删除" Click="DelectFile">
+                            <MenuItem.Icon>
+                                <Image Source="res/recycler.ico" Width="20" Height="20" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </ContextMenu>
+                </ListView.ContextMenu>
+            </ListView>
+
+
+        </DockPanel>
+
+    </Grid>
+</Window>
